@@ -19,10 +19,10 @@ else:
 
 # Load models
 if __name__ == "__main__":
-	glados = torch.jit.load('models/glados.pt')
+	glados = torch.jit.load('models/glados_Es.pt')
 	vocoder = torch.jit.load('models/vocoder-gpu.pt', map_location=device)
 else:
-	glados = torch.jit.load('glados_tts/models/glados.pt')
+	glados = torch.jit.load('glados_tts/models/glados_es.pt')
 	vocoder = torch.jit.load('glados_tts/models/vocoder-gpu.pt', map_location=device)
 
 # Prepare models in RAM

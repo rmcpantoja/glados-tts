@@ -5,11 +5,9 @@ import time
 from sys import modules as mod
 try:
     import winsound
-    import os
-    os.environ['PHONEMIZER_ESPEAK_LIBRARY'] = 'C:\Program Files\eSpeak NG\libespeak-ng.dll'
-    os.environ['PHONEMIZER_ESPEAK_PATH'] = 'C:\Program Files\eSpeak NG\espeak-ng.exe'
 except ImportError:
     from subprocess import call
+
 print("Initializing TTS Engine...")
 
 # Select the device
@@ -21,11 +19,11 @@ else:
     device = 'cpu'
 
 # Load models
-glados = torch.jit.load('models/glados.pt')
-vocoder = torch.jit.load('models/vocoder-gpu.pt', map_location=device)
+glados = torch.jit.load('models/glados_Es.pt')
+vocoder = torch.jit.load('models/vocoder-cpu-lq.pt', map_location=device)
 
 # Prepare models in RAM
-for i in range(2):
+for i in range(4):
     init = glados.generate_jit(prepare_text(str(i)))
     init_mel = init['mel_post'].to(device)
     init_vo = vocoder(init_mel)
@@ -63,7 +61,4 @@ while(1):
         if 'winsound' in mod:
             winsound.PlaySound(output_file, winsound.SND_FILENAME)
         else:
-            try:
-                call(["aplay", "./output.wav"])
-            except FileNotFoundError:
-                call(["pw-play", "./output.wav"])
+            call(["aplay", "./output.wav"])
